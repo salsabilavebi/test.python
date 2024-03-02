@@ -1,0 +1,98 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+    /* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+#patientsList {
+    margin-top: 20px;
+}
+
+.patientItem {
+    margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+    <h1>Patients</h1>
+    <form id="patientForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age"><br><br>
+        <input type="submit" value="Add Patient">
+    </form>
+    <div id="patientsList"></div>
+
+    <script src="script.js"></script>
+</body>
+<script>
+    // script.js
+document.addEventListener("DOMContentLoaded", function() {
+    const patientForm = document.getElementById("patientForm");
+    const patientsList = document.getElementById("patientsList");
+
+    // Fungsi untuk menampilkan daftar pasien
+    async function fetchPatients() {
+        try {
+            const response = await fetch("/patients/");
+            const patients = await response.json();
+            patientsList.innerHTML = ""; // Mengosongkan daftar pasien sebelum menambahkan yang baru
+            patients.forEach(patient => {
+                const patientItem = document.createElement("div");
+                patientItem.classList.add("patientItem");
+                patientItem.textContent = `ID: ${patient.id}, Name: ${patient.name}, Age: ${patient.age}`;
+                patientsList.appendChild(patientItem);
+            });
+        } catch (error) {
+            console.error("Error fetching patients:", error);
+        }
+    }
+
+    // Menangani submit form untuk menambahkan pasien baru
+    patientForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const formData = new FormData(patientForm);
+        const name = formData.get("name");
+        const age = formData.get("age");
+        const payload = {
+            name: name,
+            age: parseInt(age)
+        };
+        try {
+            const response = await fetch("/patients/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+            const newPatient = await response.json();
+            console.log("New Patient Added:", newPatient);
+            fetchPatients(); // Menampilkan kembali daftar pasien setelah menambahkan yang baru
+            patientForm.reset(); // Mengosongkan form setelah submit
+        } catch (error) {
+            console.error("Error adding patient:", error);
+        }
+    });
+
+    // Memuat daftar pasien saat halaman dimuat
+    fetchPatients();
+});
+
+</script>
+</html>
