@@ -43,3 +43,75 @@
 # Sruktur FastAPI
   - main.py: Ini adalah titik masuk utama untuk aplikasi FastAPI. Di sini, rute-rute API didefinisikan bersama dengan logika untuk mengatur permintaan HTTP dan meresponsnya.
   - models: Direktori ini berisi definisi model-model data yang mewakili struktur database.model-model tersebut didefinisikan menggunakan SQLAlchemy dalam file main.py.
+
+# Dokumentasi 
+
+### POST - membuat Patient:
+- Endpoint: http://127.0.0.1:8000/patients/
+- Metode: POST
+- Body: Data JSON untuk membuat pasien baru (nama, email, nomor telepon).
+- Response:
+  {
+    "name": "salsa",
+    "email": "salsabilavebi68@gmail.com",
+    "phone_number": "081271592009"
+}
+
+### POST - Membuat Consultation Slot:
+- Endpoint: http://127.0.0.1:8000/consultation_slots/
+- Metode: POST
+- Body: Data JSON untuk membuat slot konsultasi baru (tanggal, waktu, ketersediaan).
+- Response:
+  {
+   "date": "2024-03-03",
+    "time": "10:00",
+    "availability": true
+}
+  
+### POST - Membuat Reservation for Patient:
+- Endpoint: http://127.0.0.1:8000/patients/{patient_id}/reservations/
+- Metode: POST
+- Body: Data JSON untuk membuat reservasi baru untuk pasien tertentu (ID pasien, ID slot konsultasi).
+- Response:
+{
+    "id": 1,
+    "consultation_slot_id": 1,
+    "patient_id": 1,
+    "queue_number": 1
+}
+  
+### GET - Lihat Consultation Slots:
+
+- Endpoint: http://127.0.0.1:8000/consultation_slots/
+- Metode: GET
+- Response: Daftar slot konsultasi yang tersedia.
+
+### GET - Lihat Patients:
+- Endpoint: http://127.0.0.1:8000/patients/
+- Metode: GET
+- Response: Daftar pasien yang terdaftar.
+  
+### GET - Llihat Reservations for Patient:
+- Endpoint: http://127.0.0.1:8000/patients/{patient_id}/reservations/
+- Metode: GET
+- Response: Daftar reservasi yang dibuat oleh pasien tertentu.
+  
+### PUT - Edit Reservation:
+- Endpoint: http://127.0.0.1:8000/reservations/{reservation_id}
+- Metode: PUT
+- Body: Data JSON untuk memperbarui reservasi (ID pasien, ID slot konsultasi).
+- Response:
+  {
+    "id": 1,
+    "consultation_slot_id": 2,
+    "patient_id": 1,
+    "queue_number": 1
+}
+  
+### DELETE - Hapus Reservation:
+- Endpoint: http://127.0.0.1:8000/reservations/{reservation_id}
+- Metode: DELETE
+- Response:
+  {
+    "message": "Reservation deleted successfully"
+}
